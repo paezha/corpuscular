@@ -6,7 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-In this notebook I experiment with floating spheres using rayrender.
+In this notebook I experiment with floating corpuscules (spheres or
+cubes) using rayrender.
 
 These packages are needed:
 
@@ -147,4 +148,4 @@ render_scene(file = glue::glue("outputs/corpuscular-{seed}.png"),
              lookat = c(0, 2, 0))
 ```
 
-<img src="outputs/corpuscular-1830222.png" width="500px" />
+<img src="outputs/corpuscular-1609374.png" width="500px" />

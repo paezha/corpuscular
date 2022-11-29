@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-In this notebook I experiment with floating spheres using rayrender.
+In this notebook I experiment with floating corpuscules (spheres or cubes) using rayrender.
 
 These packages are needed:
 ```{r}
