@@ -95,9 +95,12 @@ different materials (`diffuse()`, `glossy()`, etc.). Populate the
 parameters to create the sphere:
 
 ``` r
+set.seed(seed)
+
+# Initialize data frame for corpuscules 
 obj <- data.frame()
 
-# Select collection of color palettes
+# Select shape
 edition <- sample(c("sphere", "cube"), 1)
 
 if(edition == "sphere"){
@@ -120,11 +123,18 @@ if(edition == "sphere"){
   }
 ```
 
-Add the objects to the scene:
+Add the objects to the scene, including a source of light with random
+intensity:
 
 ``` r
+set.seed(seed)
 scene <- scene |> 
-  add_object(objects = obj)
+  add_object(objects = obj) |>
+  add_object(sphere(x = mean(df$x),
+                    y = 40,
+                    z = mean(df$z), 
+                    material=light(intensity = rlnorm(1, meanlog = 3),
+                                   invisible = TRUE)))
 ```
 
 Render the scene using randomly drawn colors from the chosen palette for
@@ -137,15 +147,19 @@ set.seed(seed)
 bkg_c <- sample.int(11, 1) + 4
 
 render_scene(file = glue::glue("outputs/corpuscular-{seed}.png"),
-             scene, parallel = TRUE,
-             ambient_light = TRUE,
-             width = 1500, 
-             height = 1500, 
-             samples = 75 + abs(rnorm(1, 0, 100)), 
-             backgroundhigh = col_palette[bkg_c],
-             backgroundlow = col_palette[bkg_c - sample.int(4, 1)],
-             lookfrom = c(13, 3, 6), 
+  scene, parallel = TRUE,
+  ambient_light = TRUE,
+  width = 1500, 
+  height = 1500, 
+  samples = 75 + abs(rnorm(1, 0, 100)), 
+  backgroundhigh = col_palette[bkg_c],
+  backgroundlow = col_palette[bkg_c - sample.int(4, 1)],
+  lookfrom = c(sample(c(-1, 1), 1) * 13,
+                          3 + runif(1, 
+                                    min = -3, 
+                                    max = 6), 
+                          sample(c(-1, 1), 1) * 16), 
              lookat = c(0, 2, 0))
 ```
 
-<img src="outputs/corpuscular-1609374.png" width="500px" />
+<img src="outputs/corpuscular-8418870.png" width="500px" />

@@ -84,24 +84,30 @@ for(i in 1:nrow(df)){
 Add the objects to the scene:
 ```{r}
 scene <- scene |> 
-  add_object(objects = obj) #|>
-  # add_object(sphere(x = -5, 
-  #                   z = -20, 
-  #                   y = -10,
-  #                   material=light(intensity=100)))
+  add_object(objects = obj) |>
+   add_object(sphere(x = mean(df$x),
+                     y = 40,
+                     z = mean(df$z), 
+                     material=light(intensity=30,
+                                    invisible = TRUE)))
 ```
 
 Render the scene using randomly drawn colors from the chosen palette for the background. 
 ```{r}
 render_scene(#file = glue::glue("corpuscular-{seed}.png"),
-             scene, parallel = TRUE,
+             scene, 
+             parallel = TRUE,
              ambient_light = TRUE,
              width = 300,#1500, 
              height = 300,#1500, 
-             samples = 75,# + abs(rnorm(1, 0, 100)), 
+             samples = 75 ,#+ abs(rnorm(1, 0, 100)), 
              backgroundhigh = col_palette[bkg_c],
-             backgroundlow = col_palette[bkg_c - 3],
-             lookfrom = c(13, 3, 6), 
+             backgroundlow = col_palette[bkg_c - sample.int(4, 1)],
+             lookfrom = c(sample(c(-1, 1), 1) * 13,
+                          3 + runif(1, 
+                                    min = -3, 
+                                    max = 3), 
+                          sample(c(-1, 1), 1) * 16), 
              lookat = c(0, 2, 0))
 ```
 
