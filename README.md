@@ -162,4 +162,4 @@ render_scene(file = glue::glue("outputs/corpuscular-{seed}.png"),
              lookat = c(0, 2, 0))
 ```
 
-<img src="outputs/corpuscular-8418870.png" width="500px" />
+<img src="outputs/corpuscular-1254039.png" width="500px" />
