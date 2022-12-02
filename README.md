@@ -149,8 +149,18 @@ bkg_c <- sample.int(11, 1) + 4
 render_scene(file = glue::glue("outputs/corpuscular-{seed}.png"),
   scene, parallel = TRUE,
   ambient_light = TRUE,
+  # Square
   width = 1500, 
-  height = 1500, 
+  height = 1500,
+  # Mastodon Header
+  #width = 1500, 
+  #height = 500,#1500,
+  # iPhone 11
+  #width = 828, 
+  #height = 1792, 
+  # windows wallpaper
+  #width = 2560, 
+  #height = 1440, 
   samples = 75 + abs(rnorm(1, 0, 100)), 
   backgroundhigh = col_palette[bkg_c],
   backgroundlow = col_palette[bkg_c - sample.int(4, 1)],
@@ -162,4 +172,4 @@ render_scene(file = glue::glue("outputs/corpuscular-{seed}.png"),
              lookat = c(0, 2, 0))
 ```
 
-<img src="outputs/corpuscular-1254039.png" width="500px" />
+<img src="outputs/corpuscular-428390.png" width="500px" />
