@@ -32,13 +32,16 @@ edition <- sample(c("MexBrewer", "MetBrewer"), 1)
 
 if(edition=="MexBrewer"){
   # Randomly select a color palette (MexBrewer Edition)
-  palette_name <- sample(c("Alacena", "Atentado", "Aurora", "Concha", "Frida", "Revolucion", "Ronda", "Tierra"), 1)
+  palette_name <- sample(c("Alacena", "Atentado", 
+                           "Aurora", "Concha", "Frida",
+                           "Maiz", "Naturaleza", "Revolucion",
+                           "Ofrenda", "Ronda", "Tierra", "Vendedora"), 1)
   # col_palette <- mex.brewer(palette_name, n = 25)
   col_palette <- mex.brewer(palette_name, n = 15)
   
 }else{
   # Randomly select a color palette (MetBrewer Edition)
-  palette_name <- sample(c("Archaumbault", "Austria", "Benedictus", "Cassatt1", "Cassatt2", "Cross", "Degas", "Demuth", "Derain", "Egypt", "Gauguin", "Greek", "Hiroshige", "Hokusai1", "Hokusai2", "Hokusai3", "Homer1", "Homer2", "Ingres", "Isfahan1", "Isfahan2", "Java", "Johnson", "Juarez", "Kandinsky", "Klimt", "Lakota", "Manet", "Monet", "Moreau", "Morgenstern", "Nattier", "Navajo", "NewKingdom", "Nizami", "OKeeffe1", "OKeeffe2", "Paquin", "Peru1", "Peru2", "Pillement", "Pissaro", "Redon", "Renoir", "Robert", "Signac", "Tam", "Tara", "Thomas", "Tiepolo", "Troy", "Tsimshian", "VanGogh1", "VanGogh2", 'VanGogh3', "Veronese", "Wissing"), 1)
+  palette_name <- sample(c("Archambault", "Austria", "Benedictus", "Cassatt1", "Cassatt2", "Cross", "Degas", "Demuth", "Derain", "Egypt", "Gauguin", "Greek", "Hiroshige", "Hokusai1", "Hokusai2", "Hokusai3", "Homer1", "Homer2", "Ingres", "Isfahan1", "Isfahan2", "Java", "Johnson", "Juarez", "Kandinsky", "Klimt", "Lakota", "Manet", "Monet", "Moreau", "Morgenstern", "Nattier", "Navajo", "NewKingdom", "Nizami", "OKeeffe1", "OKeeffe2", "Paquin", "Peru1", "Peru2", "Pillement", "Pissaro", "Redon", "Renoir", "Signac", "Tam", "Tara", "Thomas", "Tiepolo", "Troy", "Tsimshian", "VanGogh1", "VanGogh2", 'VanGogh3', "Veronese", "Wissing"), 1)
   col_palette <- met.brewer(palette_name, n = 15)
 }
 ```
@@ -111,3 +114,55 @@ render_scene(#file = glue::glue("corpuscular-{seed}.png"),
              lookat = c(0, 2, 0))
 ```
 
+## Cubes with rotation
+
+Initialize a scene with a white ground:
+```{r}
+bkg_c <- sample.int(12, 1) + 3
+scene <- generate_ground(material = diffuse(color = col_palette[bkg_c]))
+```
+
+To create the spheres for the scene, initialize an empty data frame and then use `rayrender::sphere()` to create the spheres. Experiment with different materials (`diffuse()`, `glossy()`, etc.). Populate the parameters to create the sphere:
+```{r}
+obj <- data.frame()
+
+for(i in 1:nrow(df)){
+  obj <- rbind(obj,
+               cube(x = df$x[i],
+                      y = df$y[i],
+                      z = df$z[i],
+                      width = df$r[i],
+                      angle = c(45, 45, 45),
+                      material = glossy(color=df$color[i])))
+}
+```
+
+Add the objects to the scene:
+```{r}
+scene <- scene |> 
+  add_object(objects = obj) |>
+   add_object(sphere(x = mean(df$x),
+                     y = 40,
+                     z = mean(df$z), 
+                     material=light(intensity=30,
+                                    invisible = TRUE)))
+```
+
+Render the scene using randomly drawn colors from the chosen palette for the background. 
+```{r}
+render_scene(#file = glue::glue("corpuscular-{seed}.png"),
+             scene, 
+             parallel = TRUE,
+             ambient_light = TRUE,
+             width = 300,#1500, 
+             height = 300,#1500, 
+             samples = 75 ,#+ abs(rnorm(1, 0, 100)), 
+             backgroundhigh = col_palette[bkg_c],
+             backgroundlow = col_palette[bkg_c - sample.int(4, 1)],
+             lookfrom = c(sample(c(-1, 1), 1) * 13,
+                          3 + runif(1, 
+                                    min = -3, 
+                                    max = 3), 
+                          sample(c(-1, 1), 1) * 16), 
+             lookat = c(0, 2, -1))
+```
